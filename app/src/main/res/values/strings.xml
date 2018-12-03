@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Shopping Assistant</string>
+    <string name="todo">TODO</string>
+    <string name="listNameMain">Name</string>
+    <string name="listDescriptionMain">Description</string>
+    <string name="listNameView">Name</string>
+    <string name="listPriceView">0.0</string>
+    <string name="addButtonList">Add Item</string>
+    <string name="addButtonViewList">Add Item</string>
 </resources>
