@@ -10,41 +10,73 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import kotlinx.android.synthetic.main.row_list_main.view.*
+import android.widget.Toast
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainView {
+
+    private val adapter:CustomAdapter = CustomAdapter()
+
+    private var shoppingLists:List<ShoppingList> = mutableListOf()
+
+    private var mainPresenter:ListPresenter = MainViewPresenterImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val listView = findViewById<ListView>(R.id.mainListView)
+        listView.adapter = adapter
+
         val addListButton = findViewById<ImageButton>(R.id.addListButton)
 
+        mainPresenter.loadList(0)
+
         addListButton.setOnClickListener {
-            val intent = Intent(this, ViewListActivity :: class.java)
-            startActivity(intent)
+            mainPresenter.addItem()
+//            val intent =
+//            startActivity(intent)
         }
 
-        val listView = findViewById<ListView>(R.id.mainListView)
+        listView.onItemClickListener = object : OnItemClickListener {
 
-        listView.adapter = CustomAdapter()
+            override fun onItemClick(parent: AdapterView<*>, view: View,
+                                     position: Int, id: Long) {
+
+                // value of item that is clicked
+                val itemValue = listView.getItemAtPosition(position) as String
+
+                // Toast the values
+                Toast.makeText(applicationContext,
+                    "Position :$position\nItem Value : $itemValue", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    override fun setList(list: List<ShoppingList>) {
+        shoppingLists = list
+        adapter.setList(list)
+    }
+    override fun moveToNewActivity(cls: Class<*>) {
+        startActivity(Intent(this, cls))
     }
 
     private class CustomAdapter: BaseAdapter() {
 
-        private val names = arrayListOf<String>(
-            "Shopping", "Grocery Store", "New Way of Spending Money",
-            "How much am i going to spend?"
-        )
+        private var shoppingLists:List<ShoppingList> = mutableListOf()
 
-        private val descriptions = arrayListOf<String>(
-            "Description 1", "Description 2", "Description 3", "Description 4"
-        )
+        fun setList(list: List<ShoppingList>) {
+            shoppingLists = list;
+        }
 
         //responsible for how many rows are in my list
         override fun getCount(): Int {
-            return names.size
+            return shoppingLists.size
         }
 
         override fun getItemId(position: Int): Long {
@@ -74,8 +106,8 @@ class MainActivity : AppCompatActivity() {
 
             val viewHolder = rowListMain.tag as ViewHolder
 
-            viewHolder.listNameMain.text = names.get(position)
-            viewHolder.listDescriptionMain.text = descriptions.get(position)
+            viewHolder.listNameMain.text = shoppingLists.get(position).title
+            viewHolder.listDescriptionMain.text = shoppingLists.get(position).title
 
 
             return rowListMain
@@ -84,4 +116,11 @@ class MainActivity : AppCompatActivity() {
         //ViewHolder Pattern
         private class ViewHolder(val listNameMain: TextView, val listDescriptionMain: TextView)
     }
+}
+
+interface MainView {
+
+    fun setList(list: List<ShoppingList>)
+    fun moveToNewActivity(cls: Class<*>)
+
 }
