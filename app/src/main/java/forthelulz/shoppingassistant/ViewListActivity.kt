@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.row_list_view.view.*
 
-class ViewListActivity : AppCompatActivity() {
+class ViewListActivity : AppCompatActivity(), ShoppingListView {
+
+    private val adapter:CustomAdapter = CustomAdapter()
+
+    private var shoppingItems:List<ShoppingItem> = mutableListOf()
+
+    private var listPresenter:ListPresenter = ListViewPresenterImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +24,9 @@ class ViewListActivity : AppCompatActivity() {
 
         val viewListView = findViewById<ListView>(R.id.viewListView)
 
-        viewListView.adapter = CustomAdapter()
+        viewListView.adapter = adapter
+
+        listPresenter.loadList(0)
 
         //not working
         /*val layoutInflater = LayoutInflater.from(this)
@@ -29,22 +36,22 @@ class ViewListActivity : AppCompatActivity() {
 
     }
 
+    override fun setList(list: List<ShoppingItem>) {
+        shoppingItems = list;
+        adapter.setList(shoppingItems)
+    }
+
     private class CustomAdapter: BaseAdapter() {
 
-        private val names = arrayListOf<String>(
-            "Cola", "Bread", "Pizza",
-            "Chocolate"
-        )
+        private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-        private val prices = arrayListOf<Double>(
-            2.99, 2.00, 14.99, 3.50
-        )
-
-        private val pricesSum = prices.sum()
+        fun setList(list: List<ShoppingItem>) {
+            shoppingItems = list;
+        }
 
         //responsible for how many rows are in my list
         override fun getCount(): Int {
-            return names.size
+            return shoppingItems.size
         }
 
         override fun getItemId(position: Int): Long {
@@ -73,8 +80,8 @@ class ViewListActivity : AppCompatActivity() {
 
             val viewHolder = rowListView.tag as ViewHolder
 
-            viewHolder.listNameView.text = names.get(position)
-            viewHolder.listPriceView.text = prices.get(position).toString()
+            viewHolder.listNameView.text = shoppingItems.get(position).name
+            viewHolder.listPriceView.text = shoppingItems.get(position).price.toString()
 
 
             return rowListView
@@ -84,4 +91,10 @@ class ViewListActivity : AppCompatActivity() {
         //ViewHolder Pattern
         private class ViewHolder(val listNameView: TextView, val listPriceView: TextView)
     }
+}
+
+interface ShoppingListView {
+
+    fun setList(list: List<ShoppingItem>)
+
 }
