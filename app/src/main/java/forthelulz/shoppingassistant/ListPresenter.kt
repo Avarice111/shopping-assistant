@@ -1,9 +1,9 @@
 package forthelulz.shoppingassistant
 
-public interface ListPresenter {
+interface ListPresenter {
 
-    fun loadList(listId:Int)
-    fun loadItem(itemId:Int)
+    fun loadList(listId:Long)
+    fun loadItem(itemId:Long)
     fun addItem()
 
 }

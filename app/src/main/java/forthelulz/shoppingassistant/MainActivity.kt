@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private var shoppingLists:List<ShoppingList> = mutableListOf()
 
-    private var mainPresenter:ListPresenter = MainViewPresenterImpl(this)
+    private var mainPresenter:ListPresenter = MainViewPresenterImpl(this,AppDatabase.getInstance(this)!!)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity(), MainView {
 
         addListButton.setOnClickListener {
             mainPresenter.addItem()
-//            val intent =
-//            startActivity(intent)
         }
 
         listView.onItemClickListener = object : OnItemClickListener {
@@ -47,13 +45,7 @@ class MainActivity : AppCompatActivity(), MainView {
             override fun onItemClick(parent: AdapterView<*>, view: View,
                                      position: Int, id: Long) {
 
-                // value of item that is clicked
-                val itemValue = listView.getItemAtPosition(position) as String
-
-                // Toast the values
-                Toast.makeText(applicationContext,
-                    "Position :$position\nItem Value : $itemValue", Toast.LENGTH_LONG)
-                    .show()
+                mainPresenter.loadItem(listView.getItemIdAtPosition(position))
             }
         }
     }
@@ -62,8 +54,10 @@ class MainActivity : AppCompatActivity(), MainView {
         shoppingLists = list
         adapter.setList(list)
     }
-    override fun moveToNewActivity(cls: Class<*>) {
-        startActivity(Intent(this, cls))
+    override fun moveToNewActivity(cls: Class<*>, ids: LongArray) {
+        val intent = Intent(this, cls)
+        intent.putExtra(Environment.EXTRA_IDS, ids)
+        startActivity(intent)
     }
 
     private class CustomAdapter: BaseAdapter() {
@@ -80,11 +74,11 @@ class MainActivity : AppCompatActivity(), MainView {
         }
 
         override fun getItemId(position: Int): Long {
-            return position.toLong()
+            return shoppingLists.get(position).id
         }
 
         override fun getItem(position: Int): Any {
-            return "getItem"
+            return shoppingLists.get(position)
         }
 
         //responsible for rendering out each row
@@ -121,6 +115,6 @@ class MainActivity : AppCompatActivity(), MainView {
 interface MainView {
 
     fun setList(list: List<ShoppingList>)
-    fun moveToNewActivity(cls: Class<*>)
+    fun moveToNewActivity(cls: Class<*>, ids: LongArray)
 
 }
