@@ -16,7 +16,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-    private var listPresenter:ListPresenter = ListViewPresenterImpl(this)
+    private var listPresenter:ListPresenter = ListViewPresenterImpl(this, AppDatabase.getInstance(this)!!)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         viewListView.adapter = adapter
 
-        listPresenter.loadList(0)
+        listPresenter.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
 
         //not working
         /*val layoutInflater = LayoutInflater.from(this)
@@ -55,11 +55,11 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         }
 
         override fun getItemId(position: Int): Long {
-            return position.toLong()
+            return shoppingItems.get(position).id
         }
 
         override fun getItem(position: Int): Any {
-            return "getItem"
+            return shoppingItems.get(position)
         }
 
         //responsible for rendering out each row
