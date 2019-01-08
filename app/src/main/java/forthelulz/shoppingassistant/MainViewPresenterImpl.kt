@@ -1,10 +1,12 @@
 package forthelulz.shoppingassistant
 
+import  android.os.AsyncTask
+
 class MainViewPresenterImpl(var mainView: MainView, var db: AppDatabase) : ListPresenter {
 
     override fun loadList(listId:Long){
 
-        var shoppingLists:List<ShoppingList> = db.shoppingListDAO().getAll()
+        var shoppingLists:List<ShoppingList> = AsyncLoadList(db).get()
         mainView.setList(shoppingLists)
 
     }
@@ -18,8 +20,29 @@ class MainViewPresenterImpl(var mainView: MainView, var db: AppDatabase) : ListP
     override fun addItem(){
         mainView.moveToNewActivity(
             ViewListActivity::class.java,
-            db.shoppingListDAO().insertAll(ShoppingList(0,"")).toLongArray()
+            AsyncAddItem(db).execute(ShoppingList(0,"")).get().toLongArray()
             )
+    }
+
+    private class AsyncLoadList(var db: AppDatabase): AsyncTask<Unit, Unit, List<ShoppingList>>() {
+
+        override fun doInBackground(vararg params: Unit): List<ShoppingList>? {
+            return db.shoppingListDAO().getAll()
+        }
+
+
+    }
+
+    private class AsyncAddItem(var db: AppDatabase): AsyncTask<ShoppingList, Unit, List<Long>>() {
+
+        override fun doInBackground(vararg params: ShoppingList): List<Long>? {
+            var out:List<Long> = mutableListOf()
+            for(l in params)
+                out += db.shoppingListDAO().insertAll(l)
+            return out
+        }
+
+
     }
 
 }

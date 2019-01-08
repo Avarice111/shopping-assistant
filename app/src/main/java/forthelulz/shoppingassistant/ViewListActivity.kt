@@ -43,7 +43,8 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         adapter.setList(shoppingItems)
     }
 
-    private class CustomAdapter: BaseAdapter() {
+
+        private class CustomAdapter: BaseAdapter() {
 
         private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
