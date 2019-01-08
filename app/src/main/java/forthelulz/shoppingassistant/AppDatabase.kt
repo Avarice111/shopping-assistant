@@ -12,13 +12,22 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private var INSTANCE: AppDatabase? = null
+        var TEST_DB: Boolean = false
 
         fun getInstance(context: Context): AppDatabase? {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                        AppDatabase::class.java, "shopping.db")
-                        .build()
+                    if(TEST_DB) {
+                        INSTANCE = Room.inMemoryDatabaseBuilder(
+                            context.getApplicationContext(),
+                            AppDatabase::class.java
+                        ).allowMainThreadQueries().build()
+                    } else {
+                        INSTANCE = Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            AppDatabase::class.java, "shopping.db"
+                        ).build()
+                    }
                 }
             }
             return INSTANCE

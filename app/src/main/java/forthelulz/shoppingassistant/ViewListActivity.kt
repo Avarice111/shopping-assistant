@@ -16,17 +16,19 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-    private var listPresenter:ListPresenter = ListViewPresenterImpl(this, AppDatabase.getInstance(this)!!)
+    private var listPresenter:ListPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_list)
 
+        listPresenter = ListViewPresenterImpl(this, AppDatabase.getInstance(this)!!)
+
         val viewListView = findViewById<ListView>(R.id.viewListView)
 
         viewListView.adapter = adapter
 
-        listPresenter.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
+        listPresenter?.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
 
         //not working
         /*val layoutInflater = LayoutInflater.from(this)

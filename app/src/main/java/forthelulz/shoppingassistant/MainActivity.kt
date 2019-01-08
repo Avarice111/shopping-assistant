@@ -22,22 +22,24 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private var shoppingLists:List<ShoppingList> = mutableListOf()
 
-    private var mainPresenter:ListPresenter = MainViewPresenterImpl(this,AppDatabase.getInstance(this)!!)
+    private var mainPresenter:ListPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mainPresenter = MainViewPresenterImpl(this,AppDatabase.getInstance(this)!!)
+
         val listView = findViewById<ListView>(R.id.mainListView)
         listView.adapter = adapter
 
         val addListButton = findViewById<ImageButton>(R.id.addListButton)
 
-        mainPresenter.loadList(0)
+        mainPresenter?.loadList(0)
 
         addListButton.setOnClickListener {
-            mainPresenter.addItem()
+            mainPresenter?.addItem()
         }
 
         listView.onItemClickListener = object : OnItemClickListener {
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity(), MainView {
             override fun onItemClick(parent: AdapterView<*>, view: View,
                                      position: Int, id: Long) {
 
-                mainPresenter.loadItem(listView.getItemIdAtPosition(position))
+                mainPresenter?.loadItem(listView.getItemIdAtPosition(position))
             }
         }
     }
