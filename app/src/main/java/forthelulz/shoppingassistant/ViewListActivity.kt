@@ -22,7 +22,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_list)
 
-        listPresenter = ListViewPresenterImpl(this, AppDatabase.getInstance(this)!!)
+        listPresenter = ListViewPresenterImpl(this, AppDatabase(this))
 
         val viewListView = findViewById<ListView>(R.id.viewListView)
 
