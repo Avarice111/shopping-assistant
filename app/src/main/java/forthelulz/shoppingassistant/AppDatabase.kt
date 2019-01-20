@@ -9,11 +9,16 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
 
     override fun onCreate(db: SQLiteDatabase) {
 
-        val CREATE_SHOPPING_LIST = "CREATE TABLE $TABLE_SHOPPING_LIST ($ID_SHOPPING_LIST INTEGER PRIMARY KEY, $TITLE_SHOPPING_LIST TEXT);"
-        db.execSQL(CREATE_SHOPPING_LIST)
+        if(!checkIfTableExists(TABLE_SHOPPING_LIST,db)) {
+            val CREATE_SHOPPING_LIST = "CREATE TABLE $TABLE_SHOPPING_LIST ($ID_SHOPPING_LIST INTEGER PRIMARY KEY, $TITLE_SHOPPING_LIST TEXT);"
+            db.execSQL(CREATE_SHOPPING_LIST)
+        }
 
-        val CREATE_SHOPPING_ITEM = "CREATE TABLE $TABLE_SHOPPING_ITEM ($ID_SHOPPING_ITEM INTEGER PRIMARY KEY, $NAME_SHOPPING_ITEM TEXT, $PRICE_SHOPPING_ITEM DECIMAL(10,2), $LIST_ID_SHOPPING_ITEM INTEGER FOREIGN KEY REFERENCES $TABLE_SHOPPING_LIST($LIST_ID_SHOPPING_ITEM));"
-        db.execSQL(CREATE_SHOPPING_ITEM)
+        if(!checkIfTableExists(TABLE_SHOPPING_ITEM,db)) {
+            val CREATE_SHOPPING_ITEM = "CREATE TABLE $TABLE_SHOPPING_ITEM ($ID_SHOPPING_ITEM INTEGER PRIMARY KEY, $NAME_SHOPPING_ITEM TEXT, $PRICE_SHOPPING_ITEM DECIMAL(10,2), $LIST_ID_SHOPPING_ITEM INTEGER, FOREIGN KEY($LIST_ID_SHOPPING_ITEM) REFERENCES $TABLE_SHOPPING_LIST($ID_SHOPPING_LIST));"
+            db.execSQL(CREATE_SHOPPING_ITEM)
+        }
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -22,6 +27,18 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
         db.execSQL(DROP_SHOPPING_ITEM)
         db.execSQL(DROP_SHOPPING_LIST)
         onCreate(db)
+    }
+
+    fun checkIfTableExists(tableName: String, db: SQLiteDatabase): Boolean {
+        val cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '$tableName'", null)
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                cursor.close()
+                return true
+            }
+            cursor.close()
+        }
+        return false
     }
 
 
@@ -37,7 +54,7 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 var selectQuery = "SELECT * FROM $TABLE_SHOPPING_LIST WHERE"
 
                 if(listIds.isEmpty())
-                    return ArrayList()
+                    return ArrayList<ShoppingList>()
 
                 for((index, id) in listIds.withIndex()) {
                     selectQuery += " $ID_SHOPPING_LIST=$id"
@@ -83,8 +100,8 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                             shoppingLists.add(list)
                         } while (cursor.moveToNext())
                     }
+                    cursor.close()
                 }
-                cursor.close()
                 return shoppingLists
             }
         }
@@ -157,8 +174,8 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                             shoppingLists.add(list)
                         } while (cursor.moveToNext())
                     }
+                    cursor.close()
                 }
-                cursor.close()
                 return shoppingLists
             }
         }
@@ -170,7 +187,7 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
         private val TABLE_SHOPPING_LIST = "ShoppingList"
         private val ID_SHOPPING_LIST = "Id"
         private val TITLE_SHOPPING_LIST = "Title"
-        private val TABLE_SHOPPING_ITEM = "ShoppingList"
+        private val TABLE_SHOPPING_ITEM = "ShoppingItem"
         private val ID_SHOPPING_ITEM = "Id"
         private val NAME_SHOPPING_ITEM = "Name"
         private val PRICE_SHOPPING_ITEM = "Price"

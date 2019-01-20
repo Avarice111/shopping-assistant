@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainPresenter = MainViewPresenterImpl(this,AppDatabase(this))
+        mainPresenter = MainViewPresenterImpl(this,this)
 
         val listView = findViewById<ListView>(R.id.mainListView)
         listView.adapter = adapter

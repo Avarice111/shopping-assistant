@@ -1,12 +1,13 @@
 package forthelulz.shoppingassistant
 
+import android.content.Context
 import  android.os.AsyncTask
 
-class MainViewPresenterImpl(var mainView: MainView, var db: AppDatabase) : ListPresenter {
+class MainViewPresenterImpl(var mainView: MainView, var context: Context) : ListPresenter {
 
     override fun loadList(listId:Long){
 
-        var shoppingLists:List<ShoppingList> = AsyncLoadList(db).get()
+        var shoppingLists:List<ShoppingList> = AppDatabase(context).shoppingListDAO().getAll()
         mainView.setList(shoppingLists)
 
     }
@@ -20,23 +21,25 @@ class MainViewPresenterImpl(var mainView: MainView, var db: AppDatabase) : ListP
     override fun addItem(){
         mainView.moveToNewActivity(
             ViewListActivity::class.java,
-            AsyncAddItem(db).execute(ShoppingList(0,"")).get().toLongArray()
-            )
+            AppDatabase(context).shoppingListDAO().insertAll(ShoppingList(0,""))
+                .foldRight(longArrayOf(), {id, outList -> outList.plus(id)})
+        )
     }
 
-    private class AsyncLoadList(var db: AppDatabase): AsyncTask<Unit, Unit, List<ShoppingList>>() {
+    private class AsyncLoadList(var context: Context): AsyncTask<Unit, Unit, List<ShoppingList>>() {
 
         override fun doInBackground(vararg params: Unit): List<ShoppingList>? {
-            return db.shoppingListDAO().getAll()
+            return AppDatabase(context).shoppingListDAO().getAll()
         }
 
 
     }
 
-    private class AsyncAddItem(var db: AppDatabase): AsyncTask<ShoppingList, Unit, List<Long>>() {
+    private class AsyncAddItem(var context: Context): AsyncTask<ShoppingList, Unit, List<Long>>() {
 
         override fun doInBackground(vararg params: ShoppingList): List<Long>? {
             var out:List<Long> = mutableListOf()
+            var db = AppDatabase(context)
             for(l in params)
                 out += db.shoppingListDAO().insertAll(l)
             return out

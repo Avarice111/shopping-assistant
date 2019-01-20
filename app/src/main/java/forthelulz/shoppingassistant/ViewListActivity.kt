@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import kotlinx.android.synthetic.main.row_list_view.view.*
 
 class ViewListActivity : AppCompatActivity(), ShoppingListView {
@@ -22,7 +20,12 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_list)
 
-        listPresenter = ListViewPresenterImpl(this, AppDatabase(this))
+        val listView = findViewById<ListView>(R.id.viewListView)
+        listView.adapter = adapter
+
+        val addListButton = findViewById<Button>(R.id.button2)
+
+        listPresenter = ListViewPresenterImpl(this, this)
 
         val viewListView = findViewById<ListView>(R.id.viewListView)
 
@@ -30,11 +33,18 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         listPresenter?.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
 
-        //not working
-        /*val layoutInflater = LayoutInflater.from(this)
-        val buttonView: View = layoutInflater.inflate(R.layout.add_button_list, null)
-        val footer = buttonView.findViewById<Button>(R.id.button2)
-        viewListView.addFooterView(footer)*/
+        addListButton.setOnClickListener {
+            listPresenter?.addItem()
+        }
+
+        listView.onItemClickListener = object : AdapterView.OnItemClickListener {
+
+            override fun onItemClick(parent: AdapterView<*>, view: View,
+                                     position: Int, id: Long) {
+
+
+            }
+        }
 
     }
 
