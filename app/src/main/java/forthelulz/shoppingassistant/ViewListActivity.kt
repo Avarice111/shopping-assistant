@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import kotlinx.android.synthetic.main.row_list_view.view.*
 
 class ViewListActivity : AppCompatActivity(), ShoppingListView {
@@ -16,23 +14,37 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-    private var listPresenter:ListPresenter = ListViewPresenterImpl(this, AppDatabase.getInstance(this)!!)
+    private var listPresenter:ListPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_list)
 
+        val listView = findViewById<ListView>(R.id.viewListView)
+        listView.adapter = adapter
+
+        val addListButton = findViewById<Button>(R.id.button2)
+
+        listPresenter = ListViewPresenterImpl(this, this)
+
         val viewListView = findViewById<ListView>(R.id.viewListView)
 
         viewListView.adapter = adapter
 
-        listPresenter.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
+        listPresenter?.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
 
-        //not working
-        /*val layoutInflater = LayoutInflater.from(this)
-        val buttonView: View = layoutInflater.inflate(R.layout.add_button_list, null)
-        val footer = buttonView.findViewById<Button>(R.id.button2)
-        viewListView.addFooterView(footer)*/
+        addListButton.setOnClickListener {
+            listPresenter?.addItem()
+        }
+
+        listView.onItemClickListener = object : AdapterView.OnItemClickListener {
+
+            override fun onItemClick(parent: AdapterView<*>, view: View,
+                                     position: Int, id: Long) {
+
+
+            }
+        }
 
     }
 
@@ -41,7 +53,8 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         adapter.setList(shoppingItems)
     }
 
-    private class CustomAdapter: BaseAdapter() {
+
+        private class CustomAdapter: BaseAdapter() {
 
         private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
