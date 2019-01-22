@@ -39,11 +39,21 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
             listPresenter?.addItem(listId)
         }
 
+        val swipeDetector = SwipeDetector()
+
+        listView.setOnTouchListener(swipeDetector)
+
         listView.onItemClickListener = object : AdapterView.OnItemClickListener {
 
             override fun onItemClick(parent: AdapterView<*>, view: View,
                                      position: Int, id: Long) {
+                if(swipeDetector.swipeDetected()) {
+                    if(swipeDetector.action == SwipeDetector.Action.LR) {
+                        listPresenter?.delete(listView.getItemIdAtPosition(position))
+                    }
+                } else {
 
+                }
 
             }
         }

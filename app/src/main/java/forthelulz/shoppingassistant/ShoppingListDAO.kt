@@ -25,4 +25,6 @@ interface ShoppingItemDAO {
     fun update(item: ShoppingItem): Boolean
 
     fun delete(itemId: Long)
+
+    fun deleteWithListId(listId: Long)
 }

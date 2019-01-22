@@ -20,7 +20,9 @@ class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context
     }
 
     override fun delete(itemId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val itemDAO = AppDatabase(context).shoppingItemDAO()
+        itemDAO.delete(itemId)
+        listView.setList(itemDAO.getAll())
     }
 
 }

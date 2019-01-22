@@ -96,6 +96,8 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
 
             override fun delete(listId: Long) {
 
+                shoppingItemDAO().deleteWithListId(listId)
+
                 val db = writableDatabase
 
                 db.delete(TABLE_SHOPPING_LIST, " $ID_SHOPPING_LIST=?", arrayOf(listId.toString()))
@@ -189,6 +191,12 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 val db = writableDatabase
 
                 db.delete(TABLE_SHOPPING_ITEM, " $ID_SHOPPING_ITEM=?", arrayOf(itemId.toString()))
+            }
+
+            override fun deleteWithListId(listId: Long) {
+                val db = writableDatabase
+
+                db.delete(TABLE_SHOPPING_ITEM, " $LIST_ID_SHOPPING_ITEM=?", arrayOf(listId.toString()))
             }
 
             private fun getLists(query:String): List<ShoppingItem> {

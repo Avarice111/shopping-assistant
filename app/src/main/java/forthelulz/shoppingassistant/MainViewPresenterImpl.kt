@@ -30,7 +30,9 @@ class MainViewPresenterImpl(var mainView: MainView, var context: Context) : Main
     }
 
     override fun delete(itemId: Long) {
-        AppDatabase(context).shoppingListDAO().delete(itemId)
+        val listDao = AppDatabase(context).shoppingListDAO()
+        listDao.delete(itemId)
+        mainView.setList(listDao.getAll())
     }
 
 }

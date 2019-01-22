@@ -42,12 +42,21 @@ class MainActivity : AppCompatActivity(), MainView {
             mainPresenter?.addItem()
         }
 
+        val swipeDetector = SwipeDetector()
+
+        listView.setOnTouchListener(swipeDetector)
+
         listView.onItemClickListener = object : OnItemClickListener {
 
             override fun onItemClick(parent: AdapterView<*>, view: View,
                                      position: Int, id: Long) {
-
-                mainPresenter?.loadItem(listView.getItemIdAtPosition(position))
+                if(swipeDetector.swipeDetected()) {
+                    if(swipeDetector.action == SwipeDetector.Action.LR) {
+                        mainPresenter?.delete(listView.getItemIdAtPosition(position))
+                    }
+                } else {
+                    mainPresenter?.loadItem(listView.getItemIdAtPosition(position))
+                }
             }
         }
     }
