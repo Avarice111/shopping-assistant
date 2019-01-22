@@ -15,7 +15,7 @@ import android.widget.AdapterView.OnItemClickListener
 import kotlinx.android.synthetic.main.row_list_main.view.*
 import android.widget.Toast
 
-
+/*! Main activity class - entrance point of application. Is responsible for managing list of all shopping lists*/
 class MainActivity : AppCompatActivity(), MainView {
 
     private val adapter:CustomAdapter = CustomAdapter()
