@@ -23,7 +23,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         val listView = findViewById<ListView>(R.id.viewListView)
         listView.adapter = adapter
 
-        val addListButton = findViewById<Button>(R.id.button2)
+        val addListButton = findViewById<Button>(R.id.addItemButton)
 
         listPresenter = ListViewPresenterImpl(this, this)
 
