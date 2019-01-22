@@ -14,7 +14,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-    private var listPresenter:ListPresenter? = null
+    private var listPresenter:ListViewPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +31,12 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         viewListView.adapter = adapter
 
-        listPresenter?.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
+        val listId = getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first()
+
+        listPresenter?.loadList(listId)
 
         addListButton.setOnClickListener {
-            listPresenter?.addItem()
+            listPresenter?.addItem(listId)
         }
 
         listView.onItemClickListener = object : AdapterView.OnItemClickListener {
@@ -51,6 +53,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
     override fun setList(list: List<ShoppingItem>) {
         shoppingItems = list;
         adapter.setList(shoppingItems)
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -109,5 +112,4 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 interface ShoppingListView {
 
     fun setList(list: List<ShoppingItem>)
-
 }

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     private var shoppingLists:List<ShoppingList> = mutableListOf()
 
-    private var mainPresenter:ListPresenter? = null
+    private var mainPresenter:MainViewPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun setList(list: List<ShoppingList>) {
         shoppingLists = list
         adapter.setList(list)
+        adapter.notifyDataSetChanged()
     }
     override fun moveToNewActivity(cls: Class<*>, ids: LongArray) {
         val intent = Intent(this, cls)
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), MainView {
                 val layoutInflater = LayoutInflater.from(parent!!.context)
                 rowListMain = layoutInflater.inflate(R.layout.row_list_main, parent, false)
 
-                val viewHolder = ViewHolder(rowListMain.listNameView, rowListMain.listDescriptionMain)
+                val viewHolder = ViewHolder(rowListMain.listNameView)
                 rowListMain.tag = viewHolder
             }
             else {
@@ -103,14 +104,13 @@ class MainActivity : AppCompatActivity(), MainView {
             val viewHolder = rowListMain.tag as ViewHolder
 
             viewHolder.listNameMain.text = shoppingLists.get(position).title
-            viewHolder.listDescriptionMain.text = shoppingLists.get(position).title
 
 
             return rowListMain
         }
 
         //ViewHolder Pattern
-        private class ViewHolder(val listNameMain: TextView, val listDescriptionMain: TextView)
+        private class ViewHolder(val listNameMain: TextView)
     }
 }
 
