@@ -7,4 +7,7 @@
     <string name="listPriceView">0.0</string>
     <string name="addButtonList">Add Item</string>
     <string name="addButtonViewList">Add Item</string>
+    <string name="newListNameDefault">My shopping list</string>
+    <string name="submitNewListName">Submit</string>
+    <string name="newListViewTitleString">Name Your list</string>
 </resources>

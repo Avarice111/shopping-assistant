@@ -3,31 +3,35 @@ package forthelulz.shoppingassistant
 import android.content.Context
 import android.os.AsyncTask
 
-class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context) : ListPresenter {
+class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context) : ListViewPresenter {
 
     override fun loadList(listId:Long) {
-
-        var itemList:List<ShoppingItem> = AppDatabase(context).shoppingItemDAO().loadAllByListId(listId)
-        listView.setList(itemList)
-    }
-    override fun loadItem(itemId:Long) {
-
-    }
-    override fun addItem() {
-
+        listView.setList(AppDatabase(context).shoppingItemDAO().loadAllByListId(listId))
     }
 
-    private class AsyncLoadListWithIds(var context: Context): AsyncTask<Long, Unit, List<ShoppingItem>>() {
-
-        override fun doInBackground(vararg params: Long?): List<ShoppingItem>? {
-            var out:List<ShoppingItem> = mutableListOf()
-            var db = AppDatabase(context)
-            for(l in params)
-                out += db.shoppingItemDAO().loadAllByListId(l!!)
-            return out
-        }
-
-
+    override fun addItem(listId: Long) {
+        val db = AppDatabase(context)
+        db.shoppingItemDAO().insertAll(ShoppingItem(0,"",0,listId))
+        listView.setList(AppDatabase(context).shoppingItemDAO().loadAllByListId(listId))
     }
+
+    override fun update(itemId: Long, name: String, price: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun delete(itemId: Long) {
+        val itemDAO = AppDatabase(context).shoppingItemDAO()
+        itemDAO.delete(itemId)
+        listView.setList(itemDAO.getAll())
+    }
+
+}
+
+interface ListViewPresenter {
+
+    fun loadList(listId:Long)
+    fun addItem(listId: Long)
+    fun update(itemId: Long, name:String, price:Int)
+    fun delete(itemId: Long)
 
 }

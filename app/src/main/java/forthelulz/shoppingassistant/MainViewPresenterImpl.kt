@@ -3,7 +3,7 @@ package forthelulz.shoppingassistant
 import android.content.Context
 import  android.os.AsyncTask
 
-class MainViewPresenterImpl(var mainView: MainView, var context: Context) : ListPresenter {
+class MainViewPresenterImpl(var mainView: MainView, var context: Context) : MainViewPresenter {
 
     override fun loadList(listId:Long){
 
@@ -20,32 +20,29 @@ class MainViewPresenterImpl(var mainView: MainView, var context: Context) : List
     }
     override fun addItem(){
         mainView.moveToNewActivity(
-            ViewListActivity::class.java,
-            AppDatabase(context).shoppingListDAO().insertAll(ShoppingList(0,""))
-                .foldRight(longArrayOf(), {id, outList -> outList.plus(id)})
+            NewListViewActivity::class.java,
+            longArrayOf()
         )
     }
 
-    private class AsyncLoadList(var context: Context): AsyncTask<Unit, Unit, List<ShoppingList>>() {
-
-        override fun doInBackground(vararg params: Unit): List<ShoppingList>? {
-            return AppDatabase(context).shoppingListDAO().getAll()
-        }
-
-
+    override fun update(itemId: Long, name: String) {
+        AppDatabase(context).shoppingListDAO().update(ShoppingList(itemId, name))
     }
 
-    private class AsyncAddItem(var context: Context): AsyncTask<ShoppingList, Unit, List<Long>>() {
-
-        override fun doInBackground(vararg params: ShoppingList): List<Long>? {
-            var out:List<Long> = mutableListOf()
-            var db = AppDatabase(context)
-            for(l in params)
-                out += db.shoppingListDAO().insertAll(l)
-            return out
-        }
-
-
+    override fun delete(itemId: Long) {
+        val listDao = AppDatabase(context).shoppingListDAO()
+        listDao.delete(itemId)
+        mainView.setList(listDao.getAll())
     }
+
+}
+
+interface MainViewPresenter {
+
+    fun loadList(listId:Long)
+    fun loadItem(itemId:Long)
+    fun addItem()
+    fun update(itemId:Long, name:String)
+    fun delete(itemId: Long)
 
 }

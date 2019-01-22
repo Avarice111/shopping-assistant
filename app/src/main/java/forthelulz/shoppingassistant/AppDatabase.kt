@@ -75,15 +75,32 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                     values.put(TITLE_SHOPPING_LIST, list.title)
                     ids.add(db.insert(TABLE_SHOPPING_LIST, null, values))
                 }
+                db.setTransactionSuccessful()
                 db.endTransaction()
                 return ids
             }
 
-            override fun delete(item: ShoppingList) {
+            override fun update(list: ShoppingList): Boolean {
+                val db = writableDatabase
+                val values = ContentValues()
+                values.put(ID_SHOPPING_LIST, list.id)
+                values.put(TITLE_SHOPPING_LIST, list.title)
+
+                return db.update(
+                    TABLE_SHOPPING_LIST,
+                    values,
+                    " $ID_SHOPPING_LIST=?",
+                    arrayOf(list.id.toString())
+                ) > 0
+            }
+
+            override fun delete(listId: Long) {
+
+                shoppingItemDAO().deleteWithListId(listId)
 
                 val db = writableDatabase
 
-                db.delete(TABLE_SHOPPING_LIST, " $ID_SHOPPING_LIST=?", arrayOf(item.id.toString()))
+                db.delete(TABLE_SHOPPING_LIST, " $ID_SHOPPING_LIST=?", arrayOf(listId.toString()))
             }
 
             private fun getLists(query:String): List<ShoppingList> {
@@ -147,15 +164,39 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                     values.put(LIST_ID_SHOPPING_ITEM, item.shoppingListId)
                     ids.add(db.insert(TABLE_SHOPPING_ITEM, null, values))
                 }
+                db.setTransactionSuccessful()
                 db.endTransaction()
                 return ids
+
             }
 
-            override fun delete(item: ShoppingItem) {
+            override fun update(item: ShoppingItem): Boolean {
+                val db = writableDatabase
+                val values = ContentValues()
+                values.put(ID_SHOPPING_ITEM, item.id)
+                values.put(NAME_SHOPPING_ITEM, item.name)
+                values.put(PRICE_SHOPPING_ITEM, item.price)
+                values.put(LIST_ID_SHOPPING_ITEM, item.shoppingListId)
+
+                return db.update(
+                    TABLE_SHOPPING_ITEM,
+                    values,
+                    " $ID_SHOPPING_ITEM=?",
+                    arrayOf(item.id.toString())
+                ) > 0
+            }
+
+            override fun delete(itemId: Long) {
 
                 val db = writableDatabase
 
-                db.delete(TABLE_SHOPPING_ITEM, " $ID_SHOPPING_ITEM=?", arrayOf(item.id.toString()))
+                db.delete(TABLE_SHOPPING_ITEM, " $ID_SHOPPING_ITEM=?", arrayOf(itemId.toString()))
+            }
+
+            override fun deleteWithListId(listId: Long) {
+                val db = writableDatabase
+
+                db.delete(TABLE_SHOPPING_ITEM, " $LIST_ID_SHOPPING_ITEM=?", arrayOf(listId.toString()))
             }
 
             private fun getLists(query:String): List<ShoppingItem> {

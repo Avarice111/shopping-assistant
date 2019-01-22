@@ -14,7 +14,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private var shoppingItems:List<ShoppingItem> = mutableListOf()
 
-    private var listPresenter:ListPresenter? = null
+    private var listPresenter:ListViewPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,17 +31,29 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         viewListView.adapter = adapter
 
-        listPresenter?.loadList(getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first())
+        val listId = getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first()
+
+        listPresenter?.loadList(listId)
 
         addListButton.setOnClickListener {
-            listPresenter?.addItem()
+            listPresenter?.addItem(listId)
         }
+
+        val swipeDetector = SwipeDetector()
+
+        listView.setOnTouchListener(swipeDetector)
 
         listView.onItemClickListener = object : AdapterView.OnItemClickListener {
 
             override fun onItemClick(parent: AdapterView<*>, view: View,
                                      position: Int, id: Long) {
+                if(swipeDetector.swipeDetected()) {
+                    if(swipeDetector.action == SwipeDetector.Action.LR) {
+                        listPresenter?.delete(listView.getItemIdAtPosition(position))
+                    }
+                } else {
 
+                }
 
             }
         }
@@ -51,6 +63,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
     override fun setList(list: List<ShoppingItem>) {
         shoppingItems = list;
         adapter.setList(shoppingItems)
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -109,5 +122,4 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 interface ShoppingListView {
 
     fun setList(list: List<ShoppingItem>)
-
 }

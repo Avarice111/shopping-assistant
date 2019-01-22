@@ -7,7 +7,9 @@ interface ShoppingListDAO {
 
     fun insertAll(vararg lists: ShoppingList): List<Long>
 
-    fun delete(item: ShoppingList)
+    fun update(list: ShoppingList): Boolean
+
+    fun delete(listId: Long)
 
 }
 
@@ -20,5 +22,9 @@ interface ShoppingItemDAO {
 
     fun insertAll(vararg items: ShoppingItem): List<Long>
 
-    fun delete(item: ShoppingItem)
+    fun update(item: ShoppingItem): Boolean
+
+    fun delete(itemId: Long)
+
+    fun deleteWithListId(listId: Long)
 }
