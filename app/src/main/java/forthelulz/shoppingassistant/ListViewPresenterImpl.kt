@@ -1,6 +1,7 @@
 package forthelulz.shoppingassistant
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 
 class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context) : ListViewPresenter {
@@ -10,9 +11,13 @@ class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context
     }
 
     override fun addItem(listId: Long) {
-        val db = AppDatabase(context)
+        /*val db = AppDatabase(context)
         db.shoppingItemDAO().insertAll(ShoppingItem(0,"",0,listId))
-        listView.setList(AppDatabase(context).shoppingItemDAO().loadAllByListId(listId))
+        listView.setList(AppDatabase(context).shoppingItemDAO().loadAllByListId(listId))*/
+        listView.moveToNewActivity(
+            NewItemViewActivity::class.java,
+            longArrayOf(listId)
+        )
     }
 
     override fun update(itemId: Long, name: String, price: Int) {
