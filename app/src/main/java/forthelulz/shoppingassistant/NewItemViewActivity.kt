@@ -25,7 +25,7 @@ class NewItemViewActivity: AppCompatActivity(), NewItemView {
 
         submitNewItem.setOnClickListener {
             newItemPresenter?.submit(newItemName.text.toString(),
-                newItemPrice.text.toString().toInt(),
+                newItemPrice.text.toString().toDouble(),
                 listId)
         }
 

@@ -4,11 +4,12 @@ import android.content.Context
 
 class NewItemViewPresenterImpl(var newListView: NewItemView, var context: Context) : NewItemViewPresenter {
 
-    override fun submit(name: String, price: Int,listId: Long) {
+    override fun submit(name: String, price: Double,listId: Long) {
+        AppDatabase(context).shoppingItemDAO().insertAll(ShoppingItem(0,name, price, listId))
         newListView.moveToNewActivity(
             ViewListActivity::class.java,
-            AppDatabase(context).shoppingItemDAO().insertAll(ShoppingItem(0,name, price, listId))
-                .foldRight(longArrayOf(), {id, outList -> outList.plus(id)})
+                longArrayOf(listId)
+
         )
     }
 
@@ -16,6 +17,6 @@ class NewItemViewPresenterImpl(var newListView: NewItemView, var context: Contex
 
 interface NewItemViewPresenter {
 
-    fun submit(name:String, price: Int, listId: Long)
+    fun submit(name:String, price: Double, listId: Long)
 
 }
