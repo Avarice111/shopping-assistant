@@ -209,7 +209,7 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                             val list = ShoppingItem(
                                 cursor.getLong(cursor.getColumnIndex(ID_SHOPPING_ITEM)),
                                 cursor.getString(cursor.getColumnIndex(NAME_SHOPPING_ITEM)),
-                                cursor.getInt(cursor.getColumnIndex(PRICE_SHOPPING_ITEM)),
+                                cursor.getDouble(cursor.getColumnIndex(PRICE_SHOPPING_ITEM)),
                                 cursor.getLong(cursor.getColumnIndex(LIST_ID_SHOPPING_ITEM))
                             )
                             shoppingLists.add(list)

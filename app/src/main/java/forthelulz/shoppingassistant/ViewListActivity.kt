@@ -1,5 +1,6 @@
 package forthelulz.shoppingassistant
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,7 +24,9 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         val listView = findViewById<ListView>(R.id.viewListView)
         listView.adapter = adapter
 
-        val addListButton = findViewById<Button>(R.id.addItemButton)
+        val addItemButton = findViewById<Button>(R.id.addItemButton)
+
+        val editListButton = findViewById<ImageButton>(R.id.editListButton)
 
         listPresenter = ListViewPresenterImpl(this, this)
 
@@ -35,9 +38,23 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         listPresenter?.loadList(listId)
 
-        addListButton.setOnClickListener {
+        addItemButton.setOnClickListener {
             listPresenter?.addItem(listId)
         }
+
+        /*editListButton.setOnClickListener {
+            if (findViewById<EditText>(R.id.priceFormItem).text.toString() != "") {
+                listPresenter?.update(listId,
+                    findViewById<EditText>(R.id.nameFormItem).text.toString(),
+                    findViewById<EditText>(R.id.priceFormItem).text.toString().toInt())
+            }
+            else {
+                listPresenter?.update(listId,
+                    findViewById<EditText>(R.id.nameFormItem).text.toString(),
+                    0)
+            }
+
+        }*/
 
         val swipeDetector = SwipeDetector()
 
@@ -64,6 +81,12 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
         shoppingItems = list;
         adapter.setList(shoppingItems)
         adapter.notifyDataSetChanged()
+    }
+
+    override fun moveToNewActivity(cls: Class<*>, ids: LongArray) {
+        val intent = Intent(this, cls)
+        intent.putExtra(Environment.EXTRA_IDS, ids)
+        startActivity(intent)
     }
 
 
@@ -122,4 +145,5 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 interface ShoppingListView {
 
     fun setList(list: List<ShoppingItem>)
+    fun moveToNewActivity(cls: Class<*>, ids: LongArray)
 }
