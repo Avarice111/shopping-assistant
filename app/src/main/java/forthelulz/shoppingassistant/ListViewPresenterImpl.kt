@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 
+/**
+ * ListViewPresenter implementation
+ */
 class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context) : ListViewPresenter {
 
     override fun loadList(listId:Long) {
@@ -35,11 +38,30 @@ class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context
 
 }
 
+/**
+ * Presenter responsible for manipulating ViewListActivity
+ */
 interface ListViewPresenter {
 
+    /**
+     * loads all ShoppingItems from list with given id and pushes them into activity
+     * @param listId id of ShoppingList
+     */
     fun loadList(listId:Long)
+    /**
+     * adds new item to ShoppingList and refreshes activity
+     * @param listId id of ShoppingList
+     */
     fun addItem(listId: Long)
+    /**
+     * updates item with given id and starts edition activity
+     * @param itemId item id
+     */
     fun update(itemId: Long)
+    /**
+     * deletes item with given id and refreshes activity
+     * @param itemId item id
+     */
     fun delete(itemId: Long)
 
 }

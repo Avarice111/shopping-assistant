@@ -10,6 +10,9 @@ class SwipeDetector : OnTouchListener {
     private var downY: Float = 0.toFloat()
     private var upX: Float = 0.toFloat()
     private var upY: Float = 0.toFloat()
+    /**
+     * public variable in which swipe direction and orientation are saved
+     */
     var action = Action.None
         private set
 
@@ -21,10 +24,18 @@ class SwipeDetector : OnTouchListener {
         None // when no action was detected
     }
 
+    /**
+     * detects if swipe motion occurred
+     */
     fun swipeDetected(): Boolean {
         return action != Action.None
     }
 
+    /**
+     * detect motion and interprets it, whether it was swipe from right to left,
+     * left to right, top to bottom or bottom to top
+     * results are saved in public variable action
+     */
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
