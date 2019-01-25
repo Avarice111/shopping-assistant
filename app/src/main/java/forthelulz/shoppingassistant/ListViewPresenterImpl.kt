@@ -23,8 +23,11 @@ class ListViewPresenterImpl(var listView: ShoppingListView, var context: Context
         )
     }
 
-    override fun update(itemId: Long, name: String, price: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun update(itemId: Long) {
+        listView.moveToNewActivity(
+            EditItemViewActivity::class.java,
+            longArrayOf(itemId)
+        )
     }
 
     override fun delete(itemId: Long) {
@@ -51,12 +54,10 @@ interface ListViewPresenter {
      */
     fun addItem(listId: Long)
     /**
-     * updates item with given id and refreshes activity
+     * updates item with given id and starts edition activity
      * @param itemId item id
-     * @param name new name for item
-     * @param price new price for item
      */
-    fun update(itemId: Long, name:String, price:Int)
+    fun update(itemId: Long)
     /**
      * deletes item with given id and refreshes activity
      * @param itemId item id

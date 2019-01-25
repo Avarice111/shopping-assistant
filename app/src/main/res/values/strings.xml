@@ -1,19 +1,23 @@
 <resources>
 
     <string name="app_name">Shopping Assistant</string>
-    <string name="todo">TODO</string>
+    <string name="todo" translatable="false">TODO</string>
     <string name="listNameMain">Name</string>
     <string name="listDescriptionMain">Description</string>
     <string name="listNameView">Name</string>
-    <string name="listPriceView">0.0</string>
+    <string name="listPriceView" translatable="false">0.0</string>
     <string name="addButtonList">Add Item</string>
     <string name="addButtonViewList">Add Item</string>
     <string name="newListNameDefault">My shopping list</string>
-    <string name="emptyString"></string>
+    <string name="emptyString" translatable="false"></string>
     <string name="submitNewListName">Create</string>
     <string name="addNewItem">Add</string>
     <string name="newListViewTitleString">Name your list</string>
     <string name="newItemString">Create your item</string>
     <string name="nameLabel">Name:</string>
     <string name="priceLabel">Price:</string>
+    <string name="editNamePlaceholder" translatable="false">namePlaceholder</string>
+    <string name="editPricePlaceholder" translatable="false">pricePlaceholder</string>
+    <string name="editItemString">Save</string>
+    <string name="editSubmitButton">Save</string>
 </resources>
