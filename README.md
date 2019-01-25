@@ -1,7 +1,7 @@
 # shopping-assistant
 Shopping assistant Kotlin app to help you with shopping!
 
-##Running Monkey tool
+## Running Monkey tool
 Move to directory
 ```bash
 cd [android-sdk-path]**/platform-tools
