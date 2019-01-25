@@ -27,14 +27,17 @@ class EditItemViewActivity: AppCompatActivity(), EditItemView {
 
 
 
-        val listId = getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first()
+        val itemId = getIntent().getExtras().getLongArray(Environment.EXTRA_IDS).first()
 
-        editItemPresenter?.loadAllByListId(listId)
+        editItemPresenter?.loadItemById(itemId)
 
         submitEditItem.setOnClickListener {
-            editItemPresenter?.submit(nameFormItem.text.toString(),
+            editItemPresenter?.submit(
+                itemId,
+                nameFormItem.text.toString(),
                 priceFormItem.text.toString().toDouble(),
-                listId)
+                shoppingItems.first().shoppingListId
+            )
         }
 
     }
