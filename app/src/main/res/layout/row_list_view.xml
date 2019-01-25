@@ -17,7 +17,8 @@
             android:textSize="18sp"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintEnd_toStartOf="@+id/listPriceView"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+            app:layout_constraintHorizontal_bias="0.35"/>
     <TextView
             android:text="@string/listPriceView"
             android:layout_width="90dp"
@@ -25,14 +26,6 @@
             android:id="@+id/listPriceView"
             android:textSize="18sp" android:layout_marginTop="24dp" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/listNameView"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/editListButton"
-            android:layout_marginEnd="16dp" android:layout_marginRight="16dp"/>
-    <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:srcCompat="@drawable/edit_button"
-            android:id="@+id/editListButton"
-            android:background="@null" app:layout_constraintStart_toEndOf="@+id/listPriceView"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp" app:layout_constraintTop_toTopOf="parent" android:contentDescription="@string/todo"/>
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"/>
 
 </android.support.constraint.ConstraintLayout>

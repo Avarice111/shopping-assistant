@@ -26,8 +26,6 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
         val addItemButton = findViewById<Button>(R.id.addItemButton)
 
-        val editListButton = findViewById<ImageButton>(R.id.editListButton)
-
         listPresenter = ListViewPresenterImpl(this, this)
 
         val viewListView = findViewById<ListView>(R.id.viewListView)
@@ -42,20 +40,6 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
             listPresenter?.addItem(listId)
         }
 
-        /*editListButton.setOnClickListener {
-            if (findViewById<EditText>(R.id.priceFormItem).text.toString() != "") {
-                listPresenter?.update(listId,
-                    findViewById<EditText>(R.id.nameFormItem).text.toString(),
-                    findViewById<EditText>(R.id.priceFormItem).text.toString().toInt())
-            }
-            else {
-                listPresenter?.update(listId,
-                    findViewById<EditText>(R.id.nameFormItem).text.toString(),
-                    0)
-            }
-
-        }*/
-
         val swipeDetector = SwipeDetector()
 
         listView.setOnTouchListener(swipeDetector)
@@ -69,7 +53,7 @@ class ViewListActivity : AppCompatActivity(), ShoppingListView {
                         listPresenter?.delete(listView.getItemIdAtPosition(position))
                     }
                 } else {
-
+                    listPresenter?.update(listView.getItemIdAtPosition(position))
                 }
 
             }
