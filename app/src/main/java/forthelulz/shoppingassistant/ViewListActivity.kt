@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.row_list_view.view.*
 
+/**
+ * List activity class - displays item lists and enables deletion, adding and edition of them
+ */
 class ViewListActivity : AppCompatActivity(), ShoppingListView {
 
     private val adapter:CustomAdapter = CustomAdapter()

@@ -15,7 +15,9 @@ import android.widget.AdapterView.OnItemClickListener
 import kotlinx.android.synthetic.main.row_list_main.view.*
 import android.widget.Toast
 
-/*! Main activity class - entrance point of application. Is responsible for managing list of all shopping lists*/
+/**
+ * Main activity class - entrance point of application. Is responsible for managing list of all shopping lists
+ */
 class MainActivity : AppCompatActivity(), MainView {
 
     private val adapter:CustomAdapter = CustomAdapter()
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity(), MainView {
         adapter.setList(list)
         adapter.notifyDataSetChanged()
     }
+
     override fun moveToNewActivity(cls: Class<*>, ids: LongArray) {
         val intent = Intent(this, cls)
         intent.putExtra(Environment.EXTRA_IDS, ids)
@@ -123,9 +126,23 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 }
 
+/**
+ * MainActivity interface used by MainViewPresenter
+ */
 interface MainView {
 
+    /**
+     * Sets list of ShoppingLists to be displayed
+     * @param list elements to be displayed
+     * @see ShoppingList
+     */
     fun setList(list: List<ShoppingList>)
+
+    /**
+     * Instructs MainActivity to start new activity
+     * @param cls name of activity class to be started
+     * @param ids array of ids for newly launched activity
+     */
     fun moveToNewActivity(cls: Class<*>, ids: LongArray)
 
 }

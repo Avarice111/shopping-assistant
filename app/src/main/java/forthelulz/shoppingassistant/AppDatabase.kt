@@ -5,6 +5,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+/**
+ * SQLiteOpenHelper specialization responsible for setting up database adn creating DAOs
+ */
 class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_NAME, null, AppDatabase.DB_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -29,6 +32,11 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
         onCreate(db)
     }
 
+    /**
+     * Checks if table exists on database
+     * @param tableName name of table to be checked
+     * @param db instance of database
+     */
     fun checkIfTableExists(tableName: String, db: SQLiteDatabase): Boolean {
         val cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '$tableName'", null)
         if (cursor != null) {
@@ -41,15 +49,36 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
         return false
     }
 
+    /**
+     * Drops all tables
+     */
+    fun clearDB() {
+        val DROP_SHOPPING_LIST = "DROP TABLE IF EXISTS $TABLE_SHOPPING_LIST"
+        val DROP_SHOPPING_ITEM = "DROP TABLE IF EXISTS $TABLE_SHOPPING_ITEM"
+        writableDatabase.execSQL(DROP_SHOPPING_ITEM)
+        writableDatabase.execSQL(DROP_SHOPPING_LIST)
+    }
 
+    /**
+     * creates DAO for ShoppingList entities
+     */
     fun shoppingListDAO(): ShoppingListDAO {
         return object : ShoppingListDAO {
+            /**
+             * returns all saved ShoppingLists
+             * @return list of ShoppingLists
+             */
             override fun getAll(): List<ShoppingList> {
                 val selectQuery = "SELECT * FROM $TABLE_SHOPPING_LIST"
 
                 return getLists(selectQuery)
             }
 
+            /**
+             * returns ShoppingLists with specified ids
+             * @param listIds list of ids to be retrieved
+             * @return list of ShoppingLists
+             */
             override fun loadAllByIds(listIds: LongArray): List<ShoppingList> {
                 var selectQuery = "SELECT * FROM $TABLE_SHOPPING_LIST WHERE"
 
@@ -65,6 +94,11 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 return getLists(selectQuery)
             }
 
+            /**
+             * saves given ShoppingLists
+             * @param lists entities to be persisted
+             * @return list of ids of saved entities
+             */
             override fun insertAll(vararg lists: ShoppingList): List<Long> {
                 val db = writableDatabase
                 val ids = arrayListOf<Long>() as MutableList<Long>
@@ -80,6 +114,11 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 return ids
             }
 
+            /**
+             * updates in database representation of given entity
+             * @param list entity to be updated
+             * @return true if successful
+             */
             override fun update(list: ShoppingList): Boolean {
                 val db = writableDatabase
                 val values = ContentValues()
@@ -94,6 +133,10 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 ) > 0
             }
 
+            /**
+             * removes from database ShoppingList with given id
+             * @param listId id of list to be deleted
+             */
             override fun delete(listId: Long) {
 
                 shoppingItemDAO().deleteWithListId(listId)
@@ -123,14 +166,26 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
             }
         }
     }
+
+    /**
+     * creates DAO for ShoppingItem entities
+     */
     fun shoppingItemDAO(): ShoppingItemDAO {
         return object : ShoppingItemDAO {
+            /**
+             * returns all saved hoppingItem
+             * @return list of ShoppingItems
+             */
             override fun getAll(): List<ShoppingItem> {
                 val selectQuery = "SELECT * FROM $TABLE_SHOPPING_ITEM"
 
                 return getLists(selectQuery)
             }
-
+            /**
+             * returns ShoppingItems with specified ids
+             * @param itemIds list of ids to be retrieved
+             * @return list of ShoppingItems
+             */
             override fun loadAllByIds(itemIds: LongArray): List<ShoppingItem> {
                 var selectQuery = "SELECT * FROM $TABLE_SHOPPING_ITEM WHERE"
 
@@ -146,12 +201,22 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 return getLists(selectQuery)
             }
 
+            /**
+             * returns all ShoppingItems in relation with ShoppingList with given id
+             * @param shoppingListId id of ShoppingList
+             * @return list of ShoppingItems
+             */
             override fun loadAllByListId(shoppingListId: Long): List<ShoppingItem> {
                 val selectQuery = "SELECT * FROM $TABLE_SHOPPING_ITEM WHERE $LIST_ID_SHOPPING_ITEM=$shoppingListId"
 
                 return getLists(selectQuery)
             }
 
+            /**
+             * saves given ShoppingItems
+             * @param items entities to be persisted
+             * @return list of ids of saved entities
+             */
             override fun insertAll(vararg items: ShoppingItem): List<Long> {
                 val db = writableDatabase
                 val ids = arrayListOf<Long>() as MutableList<Long>
@@ -170,6 +235,11 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
 
             }
 
+            /**
+             * updates in database representation of given entity
+             * @param item entity to be updated
+             * @return true if successful
+             */
             override fun update(item: ShoppingItem): Boolean {
                 val db = writableDatabase
                 val values = ContentValues()
@@ -186,6 +256,10 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 ) > 0
             }
 
+            /**
+             * removes from database ShoppingList with given id
+             * @param itemId id of list to be deleted
+             */
             override fun delete(itemId: Long) {
 
                 val db = writableDatabase
@@ -193,6 +267,10 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
                 db.delete(TABLE_SHOPPING_ITEM, " $ID_SHOPPING_ITEM=?", arrayOf(itemId.toString()))
             }
 
+            /**
+             * removes from database all ShoppingItems associated with ShoppingList with given id
+             * @param listId id ShoppingList whose items needs to be removed
+             */
             override fun deleteWithListId(listId: Long) {
                 val db = writableDatabase
 
@@ -222,6 +300,9 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDatabase.DB_N
         }
     }
 
+    /**
+     * names used in crafting database queries
+     */
     companion object {
         private val DB_VERSION = 1
         private val DB_NAME = "Shopping"
