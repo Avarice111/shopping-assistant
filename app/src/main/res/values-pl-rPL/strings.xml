@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Asystent zakupów</string>
+    <string name="listNameMain">Nazwa</string>
+    <string name="listDescriptionMain">Opis</string>
+    <string name="listNameView">Nazwa</string>
+    <string name="addButtonList">Dodaj przedmiot</string>
+    <string name="addButtonViewList">Dodaj przedmiot</string>
+    <string name="newListNameDefault">Moja lista zakupów</string>
+    <string name="submitNewListName">Stwórz</string>
+    <string name="addNewItem">Dodaj</string>
+    <string name="newListViewTitleString">Nazwij swoją listę</string>
+    <string name="newItemString">Stwórz przedmiot</string>
+    <string name="nameLabel">Nazwa:</string>
+    <string name="priceLabel">Cena:</string>
+    <string name="editItemString">Zapisz</string>
+    <string name="editSubmitButton">Zapisz</string>
+</resources>
