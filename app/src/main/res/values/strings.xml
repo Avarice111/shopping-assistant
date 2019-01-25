@@ -16,4 +16,8 @@
     <string name="newItemString">Create your item</string>
     <string name="nameLabel">Name:</string>
     <string name="priceLabel">Price:</string>
+    <string name="editNamePlaceholder">namePlaceholder</string>
+    <string name="editPricePlaceholder">pricePlaceholder</string>
+    <string name="editItemString">Save</string>
+    <string name="editSubmitButton">Save</string>
 </resources>
